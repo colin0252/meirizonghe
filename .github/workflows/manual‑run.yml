@@ -1,50 +1,33 @@
-name: 手动执行任务（节点处理+回写仓库）
+name: 每日汇总
 on:
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
-    inputs:
-      run_args:
-        description: "运行参数（可选）"
-        required: false
-        default: ""
 
 jobs:
-  execute:
-    permissions:
-      contents: write
+  build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
-      - name: 检出仓库全部代码
+      - name: 检出仓库
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 打印环境信息
+      - name: 生成原始节点文件（这里放你原来抓取、输出txt的全部代码，不要删）
         run: |
-          echo "===== 手动任务启动 ====="
-          echo "传入参数: ${{ github.event.inputs.run_args }}"
-          date
-          ls -la nodes/
+          TODAY=$(date +%Y-%m-%d)
+          # ==========下面是你原本的脚本，复制粘贴过来==========
+          # 你的原有逻辑：输出 output/${TODAY}-1.txt
+          # ==================================================
 
-      - name: 配置Python3.12
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      # 没有requirements.txt，删除下面整块
-      - name: 安装依赖
+      - name: 转base64生成小火箭订阅文件【新增这一步】
         run: |
-          pip install -r requirements.txt
+          TODAY=$(date +%Y-%m-%d)
+          base64 -w 0 output/${TODAY}-1.txt > output/sub.txt
 
-      - name: 运行脚本，读取nodes，输出到output文件夹
+      - name: 提交更新sub.txt到仓库
         run: |
-          python main.py ${{ github.event.inputs.run_args }}
-
-      - name: 提交处理后的output文件回仓库
-        run: |
+          TODAY=$(date +%Y-%m-%d)
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add output/
-          git commit -m "【自动】节点处理完成，更新output"
+          git add output/sub.txt
+          git commit -m "update sub.txt $TODAY"
           git push
