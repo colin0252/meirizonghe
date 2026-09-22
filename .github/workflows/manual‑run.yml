@@ -32,6 +32,7 @@ jobs:
         with:
           python-version: "3.12"
 
+      # 没有requirements.txt，删除下面整块
       - name: 安装依赖
         run: |
           pip install -r requirements.txt
