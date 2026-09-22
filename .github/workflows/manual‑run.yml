@@ -7,18 +7,17 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions: write-all # 这里直接给job写权限，不用网页设置
     steps:
       - name: 检出仓库
         uses: actions/checkout@v4
 
-      - name: 生成原始节点文件（这里放你原来抓取、输出txt的全部代码，不要删）
+      - name: 生成原始节点文件
         run: |
           TODAY=$(date +%Y-%m-%d)
-          # ==========下面是你原本的脚本，复制粘贴过来==========
-          # 你的原有逻辑：输出 output/${TODAY}-1.txt
-          # ==================================================
+          # ==========粘贴你原来抓取节点输出 output/${TODAY}-1.txt 的全部脚本==========
 
-      - name: 转base64生成小火箭订阅文件【新增这一步】
+      - name: 转base64生成小火箭订阅文件
         run: |
           TODAY=$(date +%Y-%m-%d)
           base64 -w 0 output/${TODAY}-1.txt > output/sub.txt
