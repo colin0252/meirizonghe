@@ -32,7 +32,6 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 如果你不需要第三方库，把下面这一整块【安装依赖】删掉！
       - name: 安装依赖
         run: |
           pip install -r requirements.txt
