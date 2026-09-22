@@ -1,0 +1,36 @@
+name: 手动单次执行任务
+on:
+  workflow_dispatch:
+    inputs:
+      run_args:
+        description: "运行参数（可选）"
+        required: false
+        default: ""
+
+jobs:
+  execute:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: 拉取仓库代码
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 打印环境信息
+        run: |
+          echo "===== 手动任务开始 ====="
+          echo "输入参数: ${{ github.event.inputs.run_args }}"
+          date
+
+      # ======================
+      # 在这里替换成你自己要跑的命令
+      # ======================
+      - name: 执行自定义脚本
+        run: |
+          # 示例：python main.py ${{ github.event.inputs.run_args }}
+          echo "任务执行完成"
+
+      - name: 结束
+        run: |
+          echo "===== 任务全部结束 ====="
