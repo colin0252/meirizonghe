@@ -1,0 +1,9 @@
+仓库根目录
+├── .github/
+│   └── workflows/
+│       └── manual-run.yml
+├── nodes/
+│   └── node.txt
+├── output/
+├── main.py
+└── requirements.txt
